@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define int long long int
+
+void build(int ind,int low,int high,int a[],int st[]){
+	if(low==high){
+		st[ind]=a[low];
+		return;
+	}
+	int mid=(low+high)/2;
+	build(2*ind+1,low,mid,a,st);
+	build(2*ind+2,mid+1,high,a,st);
+	st[ind]=st[2*ind+1]+st[2*ind+2];
+}
+
+void update(int ind,int low,int high,int i,int st[]){
+	if(low==high){
+		st[ind]=st[ind]^1;
+		return;
+	}
+	int mid=(low+high)/2;
+	if(i<=mid){
+		update(2*ind+1,low,mid,i,st);
+	}
+	else{
+		update(2*ind+2,mid+1,high,i,st);
+	}
+	st[ind]=st[2*ind+1]+st[2*ind+2];
+}
+
+int query(int ind,int low,int high,int k,int st[]){
+	if(low==high){
+		return low;
+	}
+	int mid=(low+high)/2;
+	if(k<st[2*ind+1]){
+		return query(2*ind+1,low,mid,k,st);
+	}
+	return query(2*ind+2,mid+1,high,k-st[2*ind+1],st);
+}
+
+int32_t main(){
+
+	// #ifndef ONLINE_JUDGE
+	// freopen("input.txt","r",stdin);
+	// freopen("output.txt","w",stdout);
+	// #endif
+
+	int n,q; cin>>n>>q;
+	int a[n];
+	for(int i=0;i<n;i++){
+		cin>>a[i];
+	}
+
+	int st[4*n+1]={0};
+	build(0,0,n-1,a,st);
+
+	while(q--){
+		int type; cin>>type;
+		if(type==1){
+			int i; cin>>i;
+			update(0,0,n-1,i,st);
+		}
+		else{
+			int k; cin>>k;
+			cout<<query(0,0,n-1,k,st)<<endl;
+		}
+	}
+
+	return 0;
+
+}
