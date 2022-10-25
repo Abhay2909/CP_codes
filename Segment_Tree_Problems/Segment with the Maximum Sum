@@ -1,0 +1,107 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define int long long int
+
+struct info{
+	int sum;
+	int segsum;
+	int pref;
+	int suff;
+	info(){
+		sum=0;
+		segsum=0;
+		pref=0;
+		suff=0;
+	}
+};
+
+class ST{
+	vector<info> st;
+public:
+	ST(int n){
+		st.resize(4*n);
+	}
+
+	info merge(info left,info right){
+		info ans;
+		ans.sum=left.sum+right.sum;
+		ans.pref=max(left.pref,left.sum+right.pref);
+		ans.suff=max(right.suff,right.sum+left.suff);
+		ans.segsum=max({left.segsum,right.segsum,left.suff+right.pref});
+		return ans;
+	}
+
+	void build(int ind,int low,int high,int a[]){
+		if(low==high){
+			st[ind].sum=a[low];
+			st[ind].segsum= (a[low]>0 ? a[low] : 0);
+			st[ind].pref= (a[low]>0 ? a[low] : 0);
+			st[ind].suff= (a[low]>0 ? a[low] : 0);
+			return;
+		}
+		int mid=(low+high)/2;
+		build(2*ind+1,low,mid,a);
+		build(2*ind+2,mid+1,high,a);
+		st[ind]=merge(st[2*ind+1],st[2*ind+2]);
+	}
+
+	void update(int ind,int low,int high,int i,int val){
+		if(low==high){
+			st[ind].sum=val;
+			st[ind].segsum= (val>0 ? val : 0);
+			st[ind].pref= (val>0 ? val : 0);
+			st[ind].suff= (val>0 ? val : 0);
+			return;
+		}
+		int mid=(low+high)/2;
+		if(i<=mid){
+			update(2*ind+1,low,mid,i,val);
+		}
+		else{
+			update(2*ind+2,mid+1,high,i,val);
+		}
+		st[ind]=merge(st[2*ind+1],st[2*ind+2]);
+	}
+
+	info query(int ind,int low,int high,int l,int r){
+		if(high<l or r<low){
+			info i;
+			return i;
+		}
+		if(low>=l and high<=r){
+			return st[ind];
+		}
+		int mid=(low+high)/2;
+		info left=query(2*ind+1,low,mid,l,r);
+		info right=query(2*ind+2,mid+1,high,l,r);
+		return merge(left,right);
+	}
+};
+
+int32_t main(){
+
+	// #ifndef ONLINE_JUDGE
+	// freopen("input.txt","r",stdin);
+	// freopen("output.txt","w",stdout);
+	// #endif
+
+	int n,q; cin>>n>>q;
+	int a[n];
+	for(int i=0;i<n;i++){
+		cin>>a[i];
+	}
+	ST st(n);
+	st.build(0,0,n-1,a);
+	info ans=st.query(0,0,n-1,0,n-1);
+	cout<<ans.segsum<<endl;
+	while(q--){
+			int i,v; cin>>i>>v;
+			st.update(0,0,n-1,i,v);
+			info ans=st.query(0,0,n-1,0,n-1);
+			cout<<ans.segsum<<endl;
+	}
+
+	return 0;
+
+}
