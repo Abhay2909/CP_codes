@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define int long long int
+
+int search(vector<int>& v,int x){
+	int s=0,e=v.size()-1;
+	while(s<=e){
+		int mid=s+(e-s)/2;
+		if(v[mid]==x){
+			return mid;
+		}
+		else if(v[mid]<x){
+			s=mid+1;
+		}
+		else{
+			e=mid-1;
+		}
+	}
+	return -1;
+}
+
+int32_t main(){
+
+	// #ifndef ONLINE_JUDGE
+	// freopen("input.txt","r",stdin);
+	// freopen("output.txt","w",stdout);
+	// #endif
+
+	int n,k; cin>>n>>k;
+	vector<int> v;
+	for(int i=0;i<n;i++){
+		int no; cin>>no;
+		v.push_back(no);
+	}
+
+	while(k--){
+		int x; cin>>x;
+		int idx=search(v,x);
+		if(idx!=-1){
+			cout<<"YES"<<endl;
+		}
+		else{
+			cout<<"NO"<<endl;
+		}
+	}
+
+	return 0;
+
+}
