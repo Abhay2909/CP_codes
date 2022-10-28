@@ -1,0 +1,30 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define int long long int
+
+int32_t main(){
+
+	// #ifndef ONLINE_JUDGE
+	// freopen("input.txt","r",stdin);
+	// freopen("output.txt","w",stdout);
+	// #endif
+
+	int n,m; cin>>n>>m;
+	vector<int> v;
+	for(int i=0;i<n+m;i++){
+		int no; cin>>no;
+		v.push_back(no);
+	}
+	int i=0,j=n;
+	while(j<n+m){
+		while(i<n and v[i]<v[j]){
+			i++;
+		}
+		cout<<i<<" ";
+		j++;
+	}
+
+	return 0;
+
+}
