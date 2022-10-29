@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+using namespace std;
+ 
+#define int long long int
+ 
+int dp[105][100005];
+ 
+int solve(int n,int w,vector<int> wt,vector<int> val){
+	if(n==-1 or w==0){
+		return 0;
+	}
+	if(dp[n][w]!=-1){
+		return dp[n][w];
+	}
+	if(wt[n]>w){
+		return dp[n][w]=solve(n-1,w,wt,val);
+	}
+	return dp[n][w]=max(solve(n-1,w-wt[n],wt,val)+val[n],solve(n-1,w,wt,val));
+}
+ 
+int32_t main(){
+ 
+	// #ifndef ONLINE_JUDGE
+	// freopen("input.txt","r",stdin);
+	// freopen("output.txt","w",stdout);
+	// #endif
+ 
+	int n,W; cin>>n>>W;
+	vector<int> w;
+	vector<int> v;
+	for(int i=0;i<n;i++){
+		int a,b; cin>>a>>b;
+		w.push_back(a);
+		v.push_back(b);
+	}
+	memset(dp,-1,sizeof(dp));
+	cout<<solve(n-1,W,w,v);
+ 
+	return 0;
+ 
+}
