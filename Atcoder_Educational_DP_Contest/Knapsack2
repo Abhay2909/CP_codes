@@ -1,0 +1,65 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define int long long int
+
+int dp[100005][105];
+
+int solve(int n,vector<int>&weight,vector<int>&value,int value_left){
+	if(value_left==0){
+		return 0;
+	}
+	if(n==-1){
+		return 1e15;
+	}
+	if(dp[value_left][n]!=-1){
+		return dp[value_left][n];
+	}
+	int ans=solve(n-1,weight,value,value_left);
+	if(value_left>=value[n]){
+		ans=min(ans,solve(n-1,weight,value,value_left-value[n])+weight[n]);
+	}
+	return dp[value_left][n]=ans;
+}
+
+const int INF=1e15;
+
+int32_t main(){
+
+	// #ifndef ONLINE_JUDGE
+	// freopen("input.txt","r",stdin);
+	// freopen("output.txt","w",stdout);
+	// #endif
+
+	int n,W; cin>>n>>W;
+	vector<int> weight;
+	vector<int> value;
+
+	for(int i=0;i<n;i++){
+		int a,b; cin>>a>>b;
+		weight.push_back(a);
+		value.push_back(b);
+	}
+
+	for(int i=0;i<100005;i++){
+		for(int j=0;j<105;j++){
+			dp[i][j]=-1;
+		}
+	}
+
+	int sum_value=0;
+	for(int i=0;i<n;i++){
+		sum_value+=value[i];
+	}
+
+	for(int i=sum_value;i>=0;i--){
+		if(solve(n-1,weight,value,i)<=W){
+			cout<<i;
+			return 0;
+		}
+	}
+	cout<<0;
+
+	return 0;
+
+}
